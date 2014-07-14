@@ -1,16 +1,16 @@
 package ranking;
 
 public class PairStats {
-	private short games;
-	private short team1Wins;
-	private short draws;
-	private short team2Wins;
-	private short team1Goals;
-	private short team2Goals;
+	private int games;
+	private int team1Wins;
+	private int draws;
+	private int team2Wins;
+	private int team1Goals;
+	private int team2Goals;
 	
 	
-	public PairStats(short games, short team1Wins, short draws,
-			short team2Wins, short team1Goals, short team2Goals) {
+	public PairStats(int games, int team1Wins, int draws,
+			int team2Wins, int team1Goals, int team2Goals) {
 		this.games = games;
 		this.team1Wins = team1Wins;
 		this.draws = draws;
@@ -25,62 +25,62 @@ public class PairStats {
 	}
 
 
-	public short getGames() {
+	public int getGames() {
 		return games;
 	}
 
 
-	public void setGames(short games) {
+	public void setGames(int games) {
 		this.games = games;
 	}
 
 
-	public short getTeam1Wins() {
+	public int getTeam1Wins() {
 		return team1Wins;
 	}
 
 
-	public void setTeam1Wins(short team1Wins) {
+	public void setTeam1Wins(int team1Wins) {
 		this.team1Wins = team1Wins;
 	}
 
 
-	public short getDraws() {
+	public int getDraws() {
 		return draws;
 	}
 
 
-	public void setDraws(short draws) {
+	public void setDraws(int draws) {
 		this.draws = draws;
 	}
 
 
-	public short getTeam2Wins() {
+	public int getTeam2Wins() {
 		return team2Wins;
 	}
 
 
-	public void setTeam2Wins(short team2Wins) {
+	public void setTeam2Wins(int team2Wins) {
 		this.team2Wins = team2Wins;
 	}
 
 
-	public short getTeam1Goals() {
+	public int getTeam1Goals() {
 		return team1Goals;
 	}
 
 
-	public void setTeam1Goals(short team1Goals) {
+	public void setTeam1Goals(int team1Goals) {
 		this.team1Goals = team1Goals;
 	}
 
 
-	public short getTeam2Goals() {
+	public int getTeam2Goals() {
 		return team2Goals;
 	}
 
 
-	public void setTeam2Goals(short team2Goals) {
+	public void setTeam2Goals(int team2Goals) {
 		this.team2Goals = team2Goals;
 	}	
 }

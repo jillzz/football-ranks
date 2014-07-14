@@ -50,7 +50,7 @@ public class Pair {
 		if (this.getClass() != obj.getClass()) return false;
 		Pair o = (Pair) obj;
 		return (team1 == o.team1 && team2 == o.team2) ||
-			   (team1 == o.team2 && team2 == o.team1);
+			   (team1 == o.team2 && team2 == o.team1); 
 	}
 	
 	
