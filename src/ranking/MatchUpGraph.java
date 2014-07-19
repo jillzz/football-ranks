@@ -9,14 +9,18 @@ import crawler.Database;
 import weka.core.matrix.Matrix;
 
 public class MatchUpGraph {
-	public static Database db = new Database();
-	private static final int n = 216;
+	public static Database db = new Database();                           // database               
+	private static final int n = 216;                                     // number of countries
 	
-	private HashMap<Pair, PairStats> matchupData;
-	private Matrix adj;
-	private HashMap<Integer, Integer> idToNode;
-	public int [] id;
+	private HashMap<Pair, PairStats> matchupData;                         // matches data for every two national teams
+	private Matrix adj;                                                   // adjacency matrix of the graph
+	private HashMap<Integer, Integer> idToNode;                           // database id to graph node's id mapping
+	public int [] id;                                                     // graph node's id to database id mapping
 	
+	
+	/**
+	 * Constructor
+	 */
 	public MatchUpGraph() {
 		this.adj = new Matrix(n, n);
 		this.matchupData = new HashMap<Pair, PairStats>();
@@ -25,6 +29,11 @@ public class MatchUpGraph {
 	}
 
 	
+	/**
+	 * Read in the data from the database
+	 * 
+	 * @throws SQLException
+	 */
 	public void readDataIn () throws SQLException {
 		String querryAll = "SELECT * FROM football.matches";
 		ResultSet result = db.fetchExecute(querryAll);
@@ -50,14 +59,20 @@ public class MatchUpGraph {
 			team1Goals = result.getInt("t1_goals");
 			team2Goals = result.getInt("t2_goals");
 			
+						
 			matchupData.put(new Pair(idToNode.get(team1), idToNode.get(team2)), 
-					new PairStats(games, team1Wins, draws, team2Wins, team1Goals, team2Goals));			
+					new PairStats(games, team1Wins, draws, team2Wins, team1Goals, team2Goals));
+			matchupData.put(new Pair(idToNode.get(team2), idToNode.get(team1)), 
+					new PairStats(games, team2Wins, draws, team1Wins, team2Goals, team1Goals));	
 		}		
-		
-		System.out.println(matchupData.size() + " instances collected.");
 	}	
 	
 	
+	/**
+	 * Build the graph based on the given weighting function
+	 * 
+	 * @param function
+	 */
 	public void buildGraph (int function) {		
 		Pair p = new Pair(0, 0);
 		PairStats stats;
@@ -72,13 +87,17 @@ public class MatchUpGraph {
 				if (stats == null)
 					continue;
 				
-				adj.set(i, j, 
-						w.weight(p.teamNumber(i), stats));
+				adj.set(i, j, w.weight(stats));
 			}
 		}
 	}
 	
 	
+	/**
+	 * Returns the Adjacency Matrix
+	 * 
+	 * @return Matrix
+	 */
 	public Matrix getAdj () {
 		return adj;
 	}

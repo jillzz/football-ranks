@@ -10,69 +10,88 @@ public class LinkWeighter {
 
 	private int function;
 	
-	
+	/**
+	 * Constructor
+	 * 
+	 * @param function
+	 */
 	public LinkWeighter(int function) {
 		this.function = function;
 	}
 	
 	
-	public double weight (int team, PairStats stat) {
+	/**
+	 * Calculate the weight of the link from team1 to team2
+	 * 
+	 * @param stat
+	 * @return double
+	 */
+	public double weight (PairStats stat) {
 		switch (function) {
-			case 1: return winRatio(team, stat);
-			case 2: return lossRatio(team, stat);
-			case 3: return goalsDiffSig(team, stat);
-			case 4: return lossRatio(team, stat);
-			case 5: return goalsDecededRatio(team, stat);
+			case 1: return winRatio(stat);
+			case 2: return lossRatio(stat);
+			case 3: return goalsDiffSig(stat);
+			case 4: return lossRatio(stat);
+			case 5: return goalsDecededRatio(stat);
 			default: return 0;
 		}
 	}
 	
 	
-	public double winRatio (int team, PairStats stat) {
-		if (team == 1)
-			return stat.getTeam1Wins() / (double) stat.getGames();
-		else if (team == 2)
-			return  stat.getTeam2Wins() / (double) stat.getGames();
-		return 0;
+	/**
+	 * Calculate the weight of the team1-team2 link based on team1 win ratio
+	 * 
+	 * @param stat
+	 * @return double
+	 */
+	public double winRatio (PairStats stat) {
+		return stat.getTeam1Wins() / (double) stat.getGames();		
 	}
 	
 	
-	public double lossRatio (int team, PairStats stat) {
-		if (team == 1)
-			return winRatio(2, stat);
-		else if (team == 2)
-			return winRatio(1, stat);
-		return 0;
+	/**
+	 * Calculate the weight of the team1-team2 link based on team1 loss ratio
+	 * 
+	 * @param stat
+	 * @return double
+	 */
+	public double lossRatio (PairStats stat) {
+		return stat.getTeam2Wins() / (double) stat.getGames();		
 	}
 	
 	
-	public double goalsDiffSig (int team, PairStats stat) {
-		double x;
-		if (team == 1) 
-			x = stat.getTeam2Goals()-stat.getTeam1Goals();
-		else if (team == 2)
-			x = stat.getTeam1Goals()-stat.getTeam2Goals();
-		else
-			x = 0;
-		
+	/**
+	 * Calculate the weight of the team1-team2 link based on sigmoid of 
+	 * team1 deceded goals difference 
+	 * 
+	 * @param stat
+	 * @return double
+	 */
+	public double goalsDiffSig (PairStats stat) {
+		double x = stat.getTeam2Goals()-stat.getTeam1Goals();
 		return 1.0 / (1 + Math.exp(-x));
 	}	
 	
 	
+	/**
+	 * Calculate the weight of the team1-team2 link based on team1 loss/win ratio
+	 * 
+	 * @param stat
+	 * @return double
+	 */
 	public double lossWinRatio (int team, PairStats stat) {
-		if (team == 1) 
-			return stat.getTeam2Wins() / (double) stat.getTeam1Wins();
-		else if (team == 2)
-			return stat.getTeam1Wins() / (double) stat.getTeam2Wins();
-		return 0;		
+		return stat.getTeam2Wins() / (double) stat.getTeam1Wins();			
 	}
 	
 	
-	public double goalsDecededRatio (int team, PairStats stat) {
-		if (team == 1) 
-			return stat.getTeam2Goals() / (double) (stat.getTeam1Goals() + stat.getTeam2Goals() + 1e-15);
-		else if (team == 2)
-			return stat.getTeam1Goals() / (double) (stat.getTeam1Goals() + stat.getTeam2Goals() + 1e-15);
-		return 0;
+	/**
+	 * Calculate the weight of the team1-team2 link based on team1 
+	 * goals deceded ratio
+	 * 
+	 * @param stat
+	 * @return double
+	 */
+	public double goalsDecededRatio (PairStats stat) {
+		return stat.getTeam2Goals() / (double) (stat.getTeam1Goals() + stat.getTeam2Goals() + 1e-15);		
 	}
 }

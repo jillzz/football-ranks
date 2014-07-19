@@ -17,13 +17,6 @@ public class Pair {
 	}
 	
 	
-	public int teamNumber (int id) {
-		if (id == team1) return 1;
-		else if (id == team2) return 2;
-		return 0;		
-	}
-
-	
 	public int getTeam1() {
 		return team1;
 	}
@@ -49,8 +42,8 @@ public class Pair {
 		if (obj == null) return false;
 		if (this.getClass() != obj.getClass()) return false;
 		Pair o = (Pair) obj;
-		return (team1 == o.team1 && team2 == o.team2) ||
-			   (team1 == o.team2 && team2 == o.team1); 
+		return (team1 == o.team1 && team2 == o.team2);
+			   //(team1 == o.team2 && team2 == o.team1); 
 	}
 	
 	

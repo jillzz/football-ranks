@@ -141,35 +141,35 @@ public class Crawler {
 	 */
 	public void addMatchToDatabase (Element match, String team1) throws SQLException {
 		String temp;
-		int tmp;
 		
 		String team2 = match.child(0).text();
-		int games = Integer.parseInt(match.child(1).text());
-		int t1_wins = Integer.parseInt(match.child(2).text());
-		int draws = Integer.parseInt(match.child(3).text());
-		int t2_wins = Integer.parseInt(match.child(4).text());
-				
+		temp = match.child(1).text();
+		int games = temp.isEmpty() ? -1 : Integer.parseInt(temp); // make checks in case of missing data
+		temp = match.child(2).text();
+		int t1_wins = temp.isEmpty() ? -1 : Integer.parseInt(temp);
+		temp = match.child(3).text();
+		int draws = temp.isEmpty() ? -1 : Integer.parseInt(temp);
+		temp = match.child(4).text();
+		int t2_wins = temp.isEmpty() ? -1 : Integer.parseInt(temp);				
 		temp = match.child(5).text();
-		int t1_goals = temp.isEmpty() ? 0 : Integer.parseInt(temp);
-		
+		int t1_goals = temp.isEmpty() ? -1 : Integer.parseInt(temp);		
 		temp = match.child(6).text();
-		int t2_goals = temp.isEmpty() ? 0 : Integer.parseInt(temp);  // if no data assume 0 goals
-		
-		// should be in alphabetical order in the data base
-		if (team1.compareToIgnoreCase(team2) > 0) {
-			temp = team1; team1 = team2; team2 = temp;
-			tmp = t1_wins; t1_wins = t2_wins; t2_wins = tmp;
-			tmp = t1_goals; t1_goals = t2_goals; t2_goals = tmp;
-		}
+		int t2_goals = temp.isEmpty() ? -1 : Integer.parseInt(temp);  
 		
 		ResultSet r1 = db.fetchExecute(String.format("SELECT id FROM football.countries WHERE (country = '%s');", team1));
 		ResultSet r2 = db.fetchExecute(String.format("SELECT id FROM football.countries WHERE (country = '%s');", team2));
 		
 		if (!r1.first() || !r2.first())
-			return;   // no such a country
+			return;    // no such a country
 		
 		int t1 = r1.getInt("id");
 		int t2 = r2.getInt("id");
+		
+		r1 = db.fetchExecute(String.format("SELECT * FROM football.matches WHERE " + 
+		                                   "((team1 = %d and team2 = %d) or (team1 = %d and team2 = %d));", 
+		                                 t1, t2, t2, t1));
+		if (r1.first())
+			return;    // such a match already exists
 		
 		
 		String queryFormat = "INSERT INTO football.matches " + 
