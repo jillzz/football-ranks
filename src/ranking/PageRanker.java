@@ -57,7 +57,7 @@ public class PageRanker {
 		*/
 		
 		//sums.plusEquals(new Matrix(
-		//		A.getRowDimension(), A.getColumnDimension(), 1e-15));
+				//A.getRowDimension(), A.getColumnDimension(), 1e-15));
 		Q.arrayRightDivideEquals(sums);
 				
 		// (1-d) * A / rowSum(A) + d/n

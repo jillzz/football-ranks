@@ -7,6 +7,7 @@ public class LinkWeighter {
 	public static final int GOALS_DIFF_SIG = 3;
 	public static final int LOSS_WIN_RATIO = 4;
 	public static final int GOALS_DECEDED_RATIO = 5;
+	public static final int LOSS_WIN_RATIO_SIG = 6;
 
 	private int function;
 	
@@ -33,6 +34,7 @@ public class LinkWeighter {
 			case 3: return goalsDiffSig(stat);
 			case 4: return lossRatio(stat);
 			case 5: return goalsDecededRatio(stat);
+			case 6: return lossWinRatioSig(stat);
 			default: return 0;
 		}
 	}
@@ -56,7 +58,8 @@ public class LinkWeighter {
 	 * @return double
 	 */
 	public double lossRatio (PairStats stat) {
-		return stat.getTeam2Wins() / (double) stat.getGames();		
+		double x = (stat.getTeam2Wins() / (double) stat.getGames());
+		return x;
 	}
 	
 	
@@ -93,5 +96,14 @@ public class LinkWeighter {
 	 */
 	public double goalsDecededRatio (PairStats stat) {
 		return stat.getTeam2Goals() / (double) (stat.getTeam1Goals() + stat.getTeam2Goals() + 1e-15);		
+	}
+	
+	
+	public double lossWinRatioSig (PairStats stat) {
+		double l = lossRatio(stat);
+		double w = winRatio(stat);
+		double x = w-l;
+		
+		return 1.0 / (1 + Math.exp(-x));
 	}
 }

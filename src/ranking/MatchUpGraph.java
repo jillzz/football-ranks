@@ -59,7 +59,8 @@ public class MatchUpGraph {
 			team1Goals = result.getInt("t1_goals");
 			team2Goals = result.getInt("t2_goals");
 			
-						
+			if (games <= 1) continue;			
+			
 			matchupData.put(new Pair(idToNode.get(team1), idToNode.get(team2)), 
 					new PairStats(games, team1Wins, draws, team2Wins, team1Goals, team2Goals));
 			matchupData.put(new Pair(idToNode.get(team2), idToNode.get(team1)), 

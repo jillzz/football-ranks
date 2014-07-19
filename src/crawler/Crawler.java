@@ -1,6 +1,11 @@
 package crawler;
 
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,13 +24,14 @@ public class Crawler {
 	
 	
 	public static void main(String[] args) {
+		
 		// fetch country data
 		Crawler cw = new Crawler();
+		
 		Elements countryData = null;
 		try {
 			countryData = cw.fetchCountries();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -34,7 +40,6 @@ public class Crawler {
 			try {
 				cw.addCountryToDatabase(country.text());
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}			
 		}
@@ -48,7 +53,6 @@ public class Crawler {
 			try {
 				matches = cw.fetchMatches(base + country.attr("href") + "tab/stats");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -56,11 +60,16 @@ public class Crawler {
 				try {
 					cw.addMatchToDatabase(match, c);
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}	
 			}
-		}	
+		}
+				
+		try {
+			cw.getFlags();
+		} catch (IOException | SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 		
@@ -182,6 +191,65 @@ public class Crawler {
 				t2_wins, t1_goals, t2_goals));
 				
 		System.out.println("Database updated");
+	}
+	
+	
+	/**
+	 * Get the flag for each country
+	 * 
+	 * @throws IOException
+	 * @throws SQLException
+	 */
+	public void getFlags () throws IOException, SQLException {
+		final List<String> confederations = new ArrayList<String>(
+				Arrays.asList(new String[]{"caf","afc","concacaf","conmebol","ofc","uefa"})); 
+						
+		String base = "http://www.11v11.com";	
+		Document doc;
+		Elements data;
+		String country, imageUrl, imagePath;
+		ResultSet res;
+				
+		for (String c : confederations) {
+			doc = Jsoup.connect(base + "/" + c).get();
+			data = doc.select("li[style^=background-image]");
+			for (Element e : data) {
+				country = e.select("a").text();
+				res = db.fetchExecute(String.format("SELECT id FROM football.countries where (country = '%s')", country));
+				if (!res.first())
+					continue;
+				
+				imagePath = String.format("files/flags/%d.gif", res.getInt("id"));
+				imageUrl = base + e.attr("style").split("[()]")[1];
+				if (!imageUrl.contains("gif")) 
+					continue;
+								
+				downloadImage(imageUrl, imagePath);
+			}
+		}
+	}
+
+
+	/**
+	 * Download image from given URL
+	 * 
+	 * @param imageUrl
+	 * @param imageName
+	 * @throws IOException
+	 */
+	private void downloadImage(String imageUrl, String imageName) throws IOException {
+		URL url = new URL(imageUrl);
+		InputStream in = url.openStream();
+		OutputStream out = new BufferedOutputStream(
+				new FileOutputStream(imageName));
+		
+		for (int b; (b = in.read()) != -1; ) 
+			out.write(b);
+		
+		out.close();
+		in.close();
+		
+		System.out.println("Download finished...");
 	}
 	
 }

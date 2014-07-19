@@ -1,9 +1,13 @@
 package ranking;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 import weka.core.matrix.Matrix;
 
@@ -65,6 +69,13 @@ public class Main {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		try {
+			writeResults(pRank, graph);
+		} catch (SQLException | IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	
@@ -91,6 +102,42 @@ public class Main {
 			System.out.printf("%3d%30s\t%f\n", ++i, country, p.rank);
 		}
 		
+	}
+	
+		
+	/**
+	 * Write results to a file
+	 * 
+	 * @param pRank
+	 * @param m
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	private static void writeResults (ArrayList<Pair> pRank, MatchUpGraph m) throws SQLException, IOException {
+		PrintWriter pw = new PrintWriter(new FileWriter ("files/results", true));
+		Scanner in = new Scanner (System.in);
+
+		String query = "SELECT country FROM football.countries WHERE (id = %d);";
+		
+		System.out.println("Comment:");
+		pw.println(in.nextLine());
+		
+		ResultSet res;
+		String country;
+		pw.println("*************************************************");
+		pw.println("PAGERANKS:");
+		pw.println("*************************************************");
+		int i = 0;
+		for (Pair p : pRank) {
+			res = MatchUpGraph.db.fetchExecute(String.format(query, m.id[p.id]));
+			res.first();
+			country = res.getString("country");
+			pw.printf("%3d%30s\t%f\n", ++i, country, p.rank);
+		}
+		
+		pw.println("\n\n");
+		pw.close();
+		in.close();
 	}
 
 }
