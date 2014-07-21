@@ -15,20 +15,7 @@ public class PageRanker {
 	public static Matrix pagerank (Matrix A, double dampingFactor) {
 		Matrix Q = buildTransitionMatrix(A, dampingFactor);
 		Matrix p = powerMethod(Q);
-	
-		// TODO
-		/*
-		Matrix ones = new Matrix(1, p.getRowDimension(), 1);
-		System.out.println("Q row sums:");
-		for (int i = 0; i < Q.getRowDimension(); i++)
-			System.out.println(Q.getMatrix(i, i, 0, Q.getRowDimension()-1).times(ones.transpose()).get(0, 0));
 			
-		System.out.println();
-		System.out.println("Rank sums:");
-		System.out.println(ones.times(p).get(0,0));
-		System.out.println();
-		*/
-		
 		return p;
 	}
 	
@@ -50,12 +37,6 @@ public class PageRanker {
 		sums = A.times(sums);
 		
 		// TODO
-		/*
-		System.out.println("Row sums:");
-		for (int i = 0; i < sums.getRowDimension(); i++)
-			System.out.println(i + ": " + sums.get(i, 0));
-		*/
-		
 		//sums.plusEquals(new Matrix(
 				//A.getRowDimension(), A.getColumnDimension(), 1e-15));
 		Q.arrayRightDivideEquals(sums);
