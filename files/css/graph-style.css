@@ -5,7 +5,7 @@ graph {
 
 node {
 	size: 15px; 
-	fill-image: url('/home/skyra/workspace/football_ranks/files/flags-svg/252.png');
+	/*fill-image: url('/home/skyra/workspace/football_ranks/files/flags-svg/252.png');*/
 	fill-mode: image-scaled;
 	stroke-mode: plain;
     stroke-color: black;    
@@ -15,7 +15,7 @@ edge {
 	fill-color: #424242;
 	shape: cubic-curve;
 	arrow-shape: arrow; 
-	arrow-size: 5px;
+	arrow-size: 7px;
 	size: 1px;
 }
 
