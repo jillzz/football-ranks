@@ -102,7 +102,7 @@ public class LinkWeighter {
 	public double lossWinRatioSig (PairStats stat) {
 		double l = lossRatio(stat);
 		double w = winRatio(stat);
-		double x = w-l;
+		double x = l-w;
 		
 		return 1.0 / (1 + Math.exp(-x));
 	}

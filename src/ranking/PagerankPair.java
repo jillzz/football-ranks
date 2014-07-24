@@ -20,5 +20,13 @@ public class PagerankPair implements Comparable<PagerankPair> {
 		if (rank > o.rank) return 1;
 		if (rank < o.rank) return -1;
 		return 0;
-	}		
+	}	
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+		if (this.getClass() != obj.getClass()) return false;
+		PagerankPair o = (PagerankPair) obj;
+		return (id == o.id);
+	}
 }

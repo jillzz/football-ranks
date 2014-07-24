@@ -14,7 +14,7 @@ public class MatchUpGraph {
 	
 	private HashMap<Pair, PairStats> matchupData;                         // matches data for every two national teams
 	private Matrix adj;                                                   // adjacency matrix of the graph
-	private HashMap<Integer, Integer> idToNode;                           // database id to graph node's id mapping
+	public HashMap<Integer, Integer> idToNode;                           // database id to graph node's id mapping
 	public int [] id;                                                     // graph node's id to database id mapping
 	
 	
